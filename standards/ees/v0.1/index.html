@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evidence Envelope Specification v0.1 — VERIDIC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --muted: #555;
+      --rule: #d0c8bc;
+      --bg: #faf8f4;
+      --navy: #0A1118;
+      --gold: #DFD800;
+      --lime: #B1DB31;
+      --lime-muted: #717500;
+      --blue-5: #325170;
+      --blue-1: #E7F2F6;
+      --red: #D52F41;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; background: var(--bg); }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 1rem; line-height: 1.75; color: var(--text);
+      background: var(--bg); padding: 0 2rem 4rem 2rem;
+      max-width: 820px; margin: 0 auto;
+    }
+    .spec-band {
+      background: var(--navy); color: var(--lime);
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 0.6rem 1.4rem; margin: 0 -2rem 2.5rem -2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .spec-band .status-pill {
+      background: var(--lime); color: var(--navy);
+      padding: 0.15rem 0.7rem; font-size: 0.68rem;
+      letter-spacing: 0.1em; font-weight: 600;
+    }
+    header { margin-bottom: 3rem; }
+    header .kicker {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--lime-muted); margin-bottom: 0.6rem; font-weight: 500;
+    }
+    header h1 {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.85rem;
+      font-weight: 700; line-height: 1.15; color: var(--navy); margin-bottom: 0.8rem;
+    }
+    header h1 em { font-style: normal; color: var(--lime-muted); }
+    header .subtitle {
+      font-size: 0.95rem; color: var(--muted); line-height: 1.6;
+      border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 0.8rem;
+    }
+    header .byline {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); margin-top: 0.8rem; font-weight: 500;
+    }
+    section { margin-bottom: 2rem; }
+    h2 {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem;
+      font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.5rem; color: var(--navy);
+    }
+    h3 {
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem;
+      font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.4rem; color: var(--blue-5);
+    }
+    p { margin-bottom: 1em; }
+    .newthought { font-weight: 600; }
+    a { color: var(--blue-5); text-decoration: none; border-bottom: 1px solid var(--blue-1); }
+    a:hover { border-bottom-color: var(--blue-5); }
+    .sidenote, .marginnote {
+      display: block; background: var(--blue-1); border-left: 3px solid var(--blue-5);
+      padding: 0.6rem 1rem; margin: 1rem 0 1.2rem 0;
+      font-size: 0.85rem; line-height: 1.55; color: var(--muted);
+    }
+    .sidenote .sidenote-number, .sidenote-ref {
+      font-size: 0.72rem; color: var(--lime-muted); margin-right: 4px;
+      font-family: 'JetBrains Mono', monospace; font-weight: 600;
+    }
+    .sidenote-ref { vertical-align: super; display: inline; cursor: default; margin-left: 1px; }
+    .marginnote { background: transparent; border-left: 3px solid var(--rule); font-style: italic; }
+    pre, code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+    code { background: #f0ede7; padding: 0.1rem 0.35rem; }
+    pre {
+      background: var(--navy); color: #d4d4d4; padding: 1.2rem 1.4rem;
+      overflow-x: auto; line-height: 1.55; margin: 1rem 0 1.5rem 0;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    .kw { color: #569cd6; } .ty { color: #4ec9b0; } .str { color: #ce9178; }
+    .cm { color: #6a9955; font-style: italic; } .num { color: #b5cea8; }
+    .tufte-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.5rem 0; }
+    .tufte-table th {
+      text-align: left; font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      border-bottom: 2px solid var(--navy); padding: 0.3rem 1rem 0.3rem 0; color: var(--navy);
+    }
+    .tufte-table td { padding: 0.5rem 1rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    .tufte-table td:first-child {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: var(--blue-5); padding-right: 1.2rem; white-space: nowrap;
+    }
+    .spec-box {
+      background: var(--navy); color: #e8e8e8; padding: 1rem 1.4rem;
+      margin: 1.2rem 0; font-size: 0.88rem; line-height: 1.6;
+    }
+    .spec-box strong { color: var(--lime); }
+    .verify-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.5rem 0; }
+    .verify-table th {
+      text-align: left; font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      border-bottom: 2px solid var(--navy); padding: 0.3rem 0.8rem 0.3rem 0; color: var(--navy);
+    }
+    .verify-table td { padding: 0.5rem 0.8rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    .verify-table td:first-child {
+      font-family: 'JetBrains Mono', monospace; font-weight: 500;
+      color: var(--navy); text-align: center; width: 2rem;
+    }
+    .verify-table td:nth-child(2) code { font-size: 0.78rem; }
+    .pass { color: var(--lime-muted); font-weight: 500; }
+    .fail { color: var(--red); font-weight: 500; }
+    hr { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 2px solid var(--navy); font-size: 0.8rem; color: #aaa; line-height: 1.6; }
+    @media print {
+      @page { size: A4; margin: 2cm 2.5cm; }
+      body { font-size: 0.9rem; padding: 0; max-width: none; }
+      .spec-band { margin: 0 0 1.5rem 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .spec-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      header h1 { font-size: 1.8rem; }
+      pre { white-space: pre-wrap; word-break: break-all; font-size: 0.75rem; }
+      h2 { page-break-after: avoid; } table { page-break-inside: avoid; }
+    }
+    @media (max-width: 600px) {
+      body { padding: 0 1rem 3rem 1rem; }
+      header h1 { font-size: 1.6rem; }
+      .spec-band { flex-direction: column; gap: 0.3rem; text-align: center; margin: 0 -1rem 2rem -1rem; }
+      .tufte-table td:first-child { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SPEC BAND ═══ -->
+<div class="spec-band">
+  <span>Evidence Envelope Specification &nbsp;·&nbsp; v0.1 &nbsp;·&nbsp; April 2026</span>
+  <span class="status-pill">OPEN SPECIFICATION</span>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <p class="kicker">VERIDIC Inc. &middot; Open Standards</p>
+  <h1>Evidence Envelope Specification <em>v0.1</em></h1>
+  <p class="subtitle">An open format specification for independently custodied AI agent execution records, defining the schema, verification algorithm, and capture interface contract.</p>
+  <p class="byline">Author: Pinar Emirdag &nbsp;&middot;&nbsp; <a href="mailto:e.pinar&#64;theveridic.ai">e.pinar&#64;theveridic.ai</a> &nbsp;&middot;&nbsp; April 2026</p>
+</header>
+
+<hr/>
+
+<!-- ═══ §1 STATUS AND LICENCE ═══ -->
+<section>
+  <div class="body-text">
+    <h2>1. Status and Licence</h2>
+    <p><span class="newthought">This specification</span> is published under the Apache 2.0 licence. It may be reproduced, implemented, and extended without restriction. The Evidence Envelope Specification governs the format, schema, and verification algorithm only. VERIDIC's infrastructure &mdash; the append-only chain, key management, jurisdictional SLAs, institutional access controls &mdash; remains proprietary.</p>
+    <p>This is version 0.1. The specification is stable enough for implementation and reference but may be amended in future versions. Governance of this specification will transition to a neutral Technical Steering Committee. Until that transition, VERIDIC Inc. maintains editorial control.</p>
+  </div>
+
+  <span class="marginnote">
+    This specification governs the format, schema, and verification algorithm. Custody infrastructure &mdash; storage, access control, jurisdictional SLAs, key management &mdash; is outside scope and may be provided by any conforming implementation.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §2 SCOPE ═══ -->
+<section>
+  <div class="body-text">
+    <h2>2. Scope</h2>
+    <p>This specification defines three components:</p>
+
+    <table class="tufte-table">
+      <thead><tr><th>Component</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Schema</td>
+          <td>The AgentInteractionRecord (AIR): field definitions, types, versioning rules, identity binding fields (<code>agent_did</code>, <code>auth_context</code>, <code>delegation_chain</code>), and the OutcomeRecord schema. Defined as a structured field specification (&sect;4). A CDDL representation is provided in the companion SCITT profile for wire-format interoperability.</td>
+        </tr>
+        <tr>
+          <td>Verification</td>
+          <td>A four-step verification algorithm: SHA-256 content hash, SHA-256 chain hash, ECDSA-P256 signature verification, sequence completeness check. Requires only the record, preceding chain hash, and the Issuer&rsquo;s public key.</td>
+        </tr>
+        <tr>
+          <td>Capture</td>
+          <td>Writer interface contract: what a conforming storage backend must accept and guarantee. Append-only, at-least-once delivery, deduplication by <code>record_id</code>. Defined in IDL. Capture mechanism is out of scope.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>What is <em>not</em> part of this specification: infrastructure (storage, access control, key management, jurisdictional SLAs), APIs, analytics, reliability computation methods, query layer, framework adaptors, storage backends, jurisdiction-specific regulatory mappings. These are proprietary to the infrastructure provider. Content evaluation, risk scoring, or analytical interpretation of recorded actions is also outside the scope of this specification.</p>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">1</span>
+    The capture mechanism is deliberately out of scope. An MCP middleware hook, a LangChain callback, a framework-native wrapper, and a reverse-proxy interceptor are all valid capture implementations. The specification constrains what is <em>recorded</em>, not how it is <em>captured</em>.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §3 TERMINOLOGY ═══ -->
+<section>
+  <div class="body-text">
+    <h2>3. Terminology</h2>
+
+    <table class="tufte-table">
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Agent</td><td>An autonomous software system that perceives inputs, makes decisions, and takes actions on behalf of a principal, using one or more AI models to drive its behaviour.</td></tr>
+        <tr><td>Material Action</td><td>An action that creates, modifies, or extinguishes an external obligation, transfers value, accesses regulated data, or produces a consequential output that cannot be trivially reversed.</td></tr>
+        <tr><td>AIR</td><td>AgentInteractionRecord. A structured, signed, hash-chained record of a single Material Action.</td></tr>
+        <tr><td>Evidence Chain</td><td>The ordered, hash-chained sequence of AIRs for a given agent deployment.</td></tr>
+        <tr><td>Evidence</td><td>Information derived from a signed, hash-chained AgentInteractionRecord that attests to the integrity, provenance, and temporal ordering of a Material Action. Evidence attests to what was recorded and that the record has not been altered; it does not attest to the correctness, legality, or commercial merit of the recorded action.</td></tr>
+        
+        <tr><td>Evidence Custody</td><td>The independent, append-only holding of integrity proofs and signed records on behalf of a principal, without access to, control over, or liability for the underlying assets, transactions, or decisions those records reference.</td></tr>
+        <tr><td>Evidence Custodian</td><td>The party performing Evidence Custody by operating the Transparency Service. Independent of the Agent Operator. Holds the append-only Evidence Chain.</td></tr>
+        <tr><td>Evidence Receipt</td><td>A signed attestation issued by the Evidence Custodian upon admission of an AIR, confirming chain position and integrity.</td></tr>
+        <tr><td>Redaction Receipt</td><td>A record attesting that a field was redacted prior to signing, preserving the SHA-256 hash of the original value.</td></tr>
+        <tr><td>Principal</td><td>The human or institutional entity on whose behalf the Agent acts and to whose authority its actions are attributed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ §4 SCHEMA ═══ -->
+<section>
+  <div class="body-text">
+    <h2>4. AgentInteractionRecord Schema</h2>
+
+    <p><span class="newthought">The AIR</span> captures eight categories of evidence about a Material Action: what the agent was given (input), what it produced (outcome), what resources it used (tool calls), what it reasoned (reasoning hash), who it is (identity), what authorised it (auth context, delegation chain), when it acted (timestamps), and where it fits in a causal chain (hash chain, sequence).</p>
+
+    <h3>4.1 Field Definitions</h3>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">2</span>
+    <code>record_id</code> uses UUID v7 (RFC 9562) rather than UUID v4. UUID v7 is time-ordered, enabling range queries on the Evidence Chain without a separate index.
+  </span>
+
+  <div class="body-text">
+    <table class="tufte-table">
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>schema_version</td><td><code>string</code></td><td>MUST be <code>"air-1.0"</code>.</td></tr>
+        <tr><td>record_id</td><td><code>string</code></td><td>UUID v7 (time-ordered). Unique identifier for this record.</td></tr>
+        <tr><td>session_id</td><td><code>string</code></td><td>Workflow or session UUID grouping related actions.</td></tr>
+        <tr><td>action_type</td><td><code>string</code></td><td>Classification of the Material Action. See §4.3.</td></tr>
+        <tr><td>action_subtype</td><td><code>string|null</code></td><td>Optional refinement of the action type.</td></tr>
+        <tr><td>action_timestamp_ms</td><td><code>uint</code></td><td>Unix epoch in milliseconds. When the Material Action completed.</td></tr>
+        <tr><td>captured_timestamp_ms</td><td><code>uint</code></td><td>When the capture pipeline recorded the action.</td></tr>
+        <tr><td>written_timestamp_ms</td><td><code>uint|null</code></td><td>When the Evidence Custodian admitted the record. Null until admission.</td></tr>
+        <tr><td>agent_id</td><td><code>string</code></td><td>Stable deployment identifier for the agent.</td></tr>
+        <tr><td>agent_version</td><td><code>string</code></td><td>Model and framework version string.</td></tr>
+        <tr><td>agent_did</td><td><code>string|null</code></td><td>W3C Decentralized Identifier, if available.</td></tr>
+        <tr><td>agent_workload_id</td><td><code>string|null</code></td><td>SPIFFE ID for workload identity, if available.</td></tr>
+        <tr><td>operator_id</td><td><code>string</code></td><td>Identifier for the Agent Operator.</td></tr>
+        <tr><td>operator_pubkey_id</td><td><code>string</code></td><td>Key identifier for the signing key used.</td></tr>
+        <tr><td>principal_id</td><td><code>string|null</code></td><td>Identifier for the human or institutional principal.</td></tr>
+        <tr><td>delegation_chain</td><td><code>[string]|null</code></td><td>Array of Verifiable Credential references establishing the authority chain.</td></tr>
+        <tr><td>intent_attestation</td><td><code>string|null</code></td><td>Reference to a signed attestation of the principal's intent.</td></tr>
+        <tr><td>auth_context</td><td><code>AuthContext|null</code></td><td>OAuth/authorisation context at execution time. See §4.2.</td></tr>
+        <tr><td>input_hash</td><td><code>bytes</code></td><td>SHA-256 hash of the raw input to the agent.</td></tr>
+        <tr><td>input_summary</td><td><code>string|null</code></td><td>Human-readable summary of the input (post-redaction).</td></tr>
+        <tr><td>outcome_state</td><td><code>string</code></td><td>Terminal state: <code>completed</code>, <code>failed</code>, <code>partially_completed</code>, <code>reversed</code>, <code>pending_confirmation</code>.</td></tr>
+        <tr><td>outcome_hash</td><td><code>bytes</code></td><td>SHA-256 hash of the raw output.</td></tr>
+        <tr><td>outcome_summary</td><td><code>string|null</code></td><td>Human-readable summary of the outcome (post-redaction).</td></tr>
+        <tr><td>tool_calls</td><td><code>[ToolCallRecord]</code></td><td>Array of tool/API calls made during execution. See §4.2.</td></tr>
+        <tr><td>jurisdiction</td><td><code>string</code></td><td>ISO 3166-1 alpha-2 country code.</td></tr>
+        <tr><td>retention_class</td><td><code>string</code></td><td>Retention period label: <code>regulatory_7yr</code>, <code>regulatory_5yr</code>, <code>regulatory_3yr</code>, <code>operational_1yr</code>, <code>custom</code>. These are informational classification labels; they do not constitute a claim of compliance with any specific regulation.</td></tr>
+        <tr><td>policy_refs</td><td><code>[string]</code></td><td>References to applicable policies governing this action.</td></tr>
+        <tr><td>external_refs</td><td><code>[ExternalRef]</code></td><td>Cross-references to external systems (trade IDs, payment references). See §4.2.</td></tr>
+        <tr><td>parent_record_id</td><td><code>string|null</code></td><td>UUID of the parent AIR in a multi-step workflow.</td></tr>
+        <tr><td>workflow_id</td><td><code>string|null</code></td><td>Identifier for the broader workflow this action belongs to.</td></tr>
+        <tr><td>trace_id</td><td><code>string|null</code></td><td>OpenTelemetry trace ID for observability correlation.</td></tr>
+        <tr><td>consumer_instructions</td><td><code>string|null</code></td><td>Principal-defined constraints for agentic commerce (price thresholds, merchant restrictions).</td></tr>
+        <tr><td>reasoning_hash</td><td><code>bytes|null</code></td><td>SHA-256 hash of the reasoning trace. Preserves evidence of reasoning without requiring the raw trace in the AIR.</td></tr>
+        <tr><td>redaction_receipts</td><td><code>[RedactionReceipt]</code></td><td>Attestations of redacted fields. See §7.</td></tr>
+        <tr><td>integrity</td><td><code>IntegrityEnvelope</code></td><td>Hash chain and signature. See §5.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="body-text">
+    <h3>4.2 Supporting Types</h3>
+
+<pre><code><span class="cm">// AuthContext — authorisation state at execution time</span>
+{
+  <span class="str">"token_type"</span>:    <span class="ty">string</span>,       <span class="cm">// e.g. "Bearer"</span>
+  <span class="str">"scopes"</span>:        [<span class="ty">string</span>],     <span class="cm">// OAuth scopes granted</span>
+  <span class="str">"audience"</span>:      <span class="ty">string|null</span>,  <span class="cm">// intended audience</span>
+  <span class="str">"expires_at_ms"</span>: <span class="ty">uint|null</span>     <span class="cm">// token expiry, epoch ms</span>
+}
+
+<span class="cm">// ToolCallRecord — a single tool or API invocation</span>
+{
+  <span class="str">"tool_id"</span>:       <span class="ty">string</span>,   <span class="cm">// tool identifier</span>
+  <span class="str">"tool_type"</span>:     <span class="ty">string</span>,   <span class="cm">// e.g. "api_call", "mcp_tool"</span>
+  <span class="str">"input_hash"</span>:   <span class="ty">bytes</span>,    <span class="cm">// SHA-256 of tool input</span>
+  <span class="str">"output_hash"</span>:  <span class="ty">bytes</span>,    <span class="cm">// SHA-256 of tool output</span>
+  <span class="str">"is_write"</span>:     <span class="ty">bool</span>,     <span class="cm">// true if tool mutates state</span>
+  <span class="str">"timestamp_ms"</span>: <span class="ty">uint</span>      <span class="cm">// when this call completed</span>
+}
+
+<span class="cm">// ExternalRef — cross-reference to external system</span>
+{
+  <span class="str">"ref_type"</span>:   <span class="ty">string</span>,       <span class="cm">// e.g. "payment_ref", "trade_id"</span>
+  <span class="str">"ref_value"</span>:  <span class="ty">string</span>,       <span class="cm">// the reference value</span>
+  <span class="str">"ref_system"</span>: <span class="ty">string|null</span>  <span class="cm">// originating system</span>
+}
+
+<span class="cm">// RedactionReceipt — see §7</span>
+{
+  <span class="str">"field_path"</span>:    <span class="ty">string</span>,  <span class="cm">// dot-path to redacted field</span>
+  <span class="str">"original_hash"</span>: <span class="ty">bytes</span>,   <span class="cm">// SHA-256 of original value</span>
+  <span class="str">"policy_id"</span>:     <span class="ty">string</span>,  <span class="cm">// which policy triggered redaction</span>
+  <span class="str">"timestamp_ms"</span>:  <span class="ty">uint</span>    <span class="cm">// when redaction was applied</span>
+}
+
+<span class="cm">// IntegrityEnvelope — see §5</span>
+{
+  <span class="str">"content_hash"</span>:    <span class="ty">bytes</span>,  <span class="cm">// SHA-256 of canonical payload</span>
+  <span class="str">"prev_chain_hash"</span>: <span class="ty">bytes</span>,  <span class="cm">// chain_hash of preceding record</span>
+  <span class="str">"chain_hash"</span>:      <span class="ty">bytes</span>,  <span class="cm">// SHA-256(content_hash ∥ prev_chain_hash ∥ action_timestamp_ms ∥ agent_id)</span>
+  <span class="str">"sequence_number"</span>: <span class="ty">uint</span>,   <span class="cm">// monotonically increasing, 0-based</span>
+  <span class="str">"signature"</span>:       <span class="ty">bytes</span>   <span class="cm">// ECDSA-P256 over chain_hash</span>
+}</code></pre>
+  </div>
+</section>
+
+<section>
+  <div class="body-text">
+    <h3>4.3 Action Type Vocabulary</h3>
+    <p>Each AIR carries an <code>action_type</code> classifying the Material Action. The initial vocabulary defined by this specification:</p>
+
+    <table class="tufte-table">
+      <thead><tr><th>Value</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>payment_initiation</td><td>Initiation of a payment instruction.</td></tr>
+        <tr><td>payment_execution</td><td>Confirmed execution of a payment.</td></tr>
+        <tr><td>contract_formation</td><td>Formation of a binding agreement.</td></tr>
+        <tr><td>contract_modification</td><td>Amendment of an existing agreement.</td></tr>
+        <tr><td>regulated_data_access</td><td>Access to regulated personal or financial data.</td></tr>
+        <tr><td>regulated_data_export</td><td>Export or transfer of regulated data.</td></tr>
+        <tr><td>trade_execution</td><td>Execution of a financial instrument trade.</td></tr>
+        <tr><td>credit_decision</td><td>Decision affecting credit standing or access.</td></tr>
+        <tr><td>authorisation_grant</td><td>Grant of authority to act.</td></tr>
+        <tr><td>authorisation_revocation</td><td>Revocation of previously granted authority.</td></tr>
+        <tr><td>external_commitment</td><td>A write or irreversible API call to an external system.</td></tr>
+        <tr><td>key_rotation</td><td>Rotation of an Issuer signing key. Creates a verifiable record of key lifecycle in the Evidence Chain.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Implementations may define additional values using a reverse-DNS namespace (e.g. <code>com.example.custom-action</code>). Values without a namespace prefix are reserved for this specification.</p>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">3</span>
+    The action type vocabulary is extensible by design. The initial set covers regulated financial services use cases. As the specification is adopted in new domains, the vocabulary will be extended through the governance process described in §9.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §5 INTEGRITY ENVELOPE ═══ -->
+<section>
+  <div class="body-text">
+    <h2>5. Integrity Envelope</h2>
+
+    <p><span class="newthought">Every AIR carries</span> an integrity envelope computed by the signing component before submission to the Evidence Custodian. The cryptographic primitives are fixed: SHA-256 for hashing, ECDSA with the P-256 curve for signatures.</p>
+
+    <h3>5.1 Hash Chain Construction</h3>
+    <p>For the first record in a chain (<code>sequence_number = 0</code>): <code>prev_chain_hash</code> is 32 zero bytes. For all subsequent records: <code>prev_chain_hash</code> is the <code>chain_hash</code> of the immediately preceding record.</p>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">4</span>
+    The three-timestamp model (<code>action_timestamp_ms</code>, <code>captured_timestamp_ms</code>, <code>written_timestamp_ms</code>) allows reconstruction of pipeline latency. The action timestamp is when the event happened; the captured timestamp is when the pipeline recorded it; the written timestamp is when the custodian admitted it.
+  </span>
+
+  <div class="body-text">
+<pre><code><span class="cm">// For every record:</span>
+content_hash   = <span class="kw">SHA-256</span>(canonical_payload)
+chain_hash     = <span class="kw">SHA-256</span>(content_hash <span class="kw">∥</span> prev_chain_hash <span class="kw">∥</span> action_timestamp_ms <span class="kw">∥</span> agent_id)
+signature      = <span class="kw">ECDSA-P256.sign</span>(chain_hash, private_key)</code></pre>
+
+    <p>The four-input construction binds identity and temporal ordering into the chain at the cryptographic level: a receipt proves who, when, and what without requiring payload access. Both <code>agent_id</code> and <code>action_timestamp_ms</code> are mandatory fields supplied by the upstream agent platform at capture time.</p>
+
+    <p>The concatenation inputs are encoded as follows: <code>content_hash</code> and <code>prev_chain_hash</code> are raw 32-byte SHA-256 digest bytes. <code>action_timestamp_ms</code> is an unsigned 64-bit integer in big-endian (network) byte order (8 bytes). <code>agent_id</code> is a length-prefixed UTF-8 string: a 4-byte big-endian unsigned 32-bit integer containing the byte length of the UTF-8 encoding, followed by the UTF-8 encoded bytes (no null terminator). The total input to SHA-256 is exactly 76 + len(agent_id) bytes. This encoding is deterministic: two conforming implementations given the same field values MUST produce the same <code>chain_hash</code>.</p>
+
+    <p>Canonical form follows the JSON Canonicalization Scheme (RFC 8785). All fields except the <code>integrity</code> envelope are included in the canonical payload.</p>
+
+    <h3>5.1.1 Concurrency and Serialisation</h3>
+    <p>The hash chain construction requires sequential production of records within a single Evidence Chain. Because each record's <code>chain_hash</code> depends on the preceding record's <code>chain_hash</code> via <code>prev_chain_hash</code>, a conforming implementation cannot produce record N+1 until record N has been finalised and signed. This dependency provides a total ordering guarantee that is cryptographically enforced rather than administratively asserted.</p>
+    <p>Evidence Chains are scoped per <code>agent_id</code>. Agents with distinct <code>agent_id</code> values operate independent chains with no cross-chain ordering dependency. Concurrent agent deployments do not contend with each other.</p>
+    <p>Within a single <code>agent_id</code>, implementations must serialise record production. Two conforming patterns exist: (a) the Issuer's capture pipeline maintains a per-<code>agent_id</code> serialisation point (queue or mutex) and produces fully signed, sequenced records before submission to the Evidence Custodian; or (b) the Evidence Custodian assigns sequence numbers at admission time and returns <code>chain_hash</code> to the Issuer for use in the next record. Pattern (a) requires Issuer-side state but minimises round trips. Pattern (b) centralises ordering but introduces a synchronous dependency on the Evidence Custodian for each record.</p>
+    <p>If an agent produces multiple Material Actions concurrently, the capture pipeline queues them and serialises into the chain in arrival order. Records may share the same <code>action_timestamp_ms</code>; the <code>sequence_number</code> provides the authoritative total ordering.</p>
+
+    <h3>5.2 Identity Binding Levels</h3>
+    <table class="tufte-table">
+      <thead><tr><th>Level</th><th>Requirements</th></tr></thead>
+      <tbody>
+        <tr><td>Level 1</td><td><code>agent_id</code> and <code>operator_id</code> present. Signing key pre-registered. Signature verifies.</td></tr>
+        <tr><td>Level 2</td><td>Level 1 plus <code>auth_context</code> present with valid scopes and non-expired token claims at <code>action_timestamp_ms</code>.</td></tr>
+        <tr><td>Level 3</td><td>Level 2 plus at least one resolvable Verifiable Credential in <code>delegation_chain</code>, verified by the Issuer at capture time.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ §6 VERIFICATION ALGORITHM ═══ -->
+<section>
+  <div class="body-text">
+    <h2>6. Verification Algorithm</h2>
+
+    <div class="spec-box">
+      <strong>Architectural commitment.</strong> The verification algorithm is architecturally separate from access control. Who can see records is permissioned. How to verify records is public by design. The algorithm has no secrets &mdash; the public key is, by definition, public.
+    </div>
+
+    <p><span class="newthought">The following four-step algorithm</span> verifies any AIR. It requires only the record, the preceding record's <code>chain_hash</code> (or an Evidence Receipt), and the Issuer's public key.</p>
+  </div>
+
+  <span class="marginnote">
+    The verification algorithm is self-contained. Any party holding the public key and the chain can verify independently, without contacting the Transparency Service or any other infrastructure provider.
+  </span>
+
+  <div class="body-text">
+    <table class="verify-table">
+      <thead>
+        <tr><th>#</th><th>Operation</th><th>Pass</th><th>Fail implication</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>SHA-256(canonical_payload) == content_hash</code></td>
+          <td class="pass">payload intact</td>
+          <td class="fail">payload modified after signing</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>SHA-256(content_hash ∥ prev_chain_hash ∥ action_timestamp_ms ∥ agent_id) == chain_hash</code></td>
+          <td class="pass">chain intact</td>
+          <td class="fail">record reordered, inserted, or removed</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>ECDSA-P256.verify(chain_hash, sig, pubkey)</code></td>
+          <td class="pass">signature valid</td>
+          <td class="fail">record not signed by claimed Operator</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>sequence_number == prev + 1</code> (monotonically increasing, no gaps)</td>
+          <td class="pass">no omissions</td>
+          <td class="fail">missing records &mdash; break point located</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>If all four steps pass: the record is <strong>VERIFIED</strong> &mdash; intact, untampered, correctly positioned in the chain, and signed by the claimed Issuer.</p>
+
+    <h3>6.1 Pseudocode</h3>
+
+<pre><code><span class="kw">function</span> <span class="ty">verify_chain</span>(records, public_key):
+    prev_chain_hash = <span class="num">0x00</span> * <span class="num">32</span>  <span class="cm">// 32 zero bytes for first record</span>
+    expected_seq = <span class="num">0</span>
+
+    <span class="kw">for</span> record <span class="kw">in</span> records:
+        <span class="cm">// Step 1: payload integrity</span>
+        payload = canonicalise(record, exclude=[<span class="str">"integrity"</span>])
+        content_hash = <span class="kw">sha256</span>(payload)
+        <span class="kw">assert</span> content_hash == record.integrity.content_hash
+
+        <span class="cm">// Step 2: chain integrity</span>
+        chain_hash = <span class="kw">sha256</span>(
+            content_hash + prev_chain_hash +
+            record.action_timestamp_ms + record.agent_id
+        )
+        <span class="kw">assert</span> chain_hash == record.integrity.chain_hash
+
+        <span class="cm">// Step 3: signature validity</span>
+        <span class="kw">assert</span> <span class="ty">ecdsa_p256_verify</span>(
+            chain_hash,
+            record.integrity.signature,
+            public_key
+        )
+
+        <span class="cm">// Step 4: sequence completeness</span>
+        <span class="kw">assert</span> record.integrity.sequence_number == expected_seq
+
+        prev_chain_hash = chain_hash
+        expected_seq += <span class="num">1</span>
+
+    <span class="kw">return</span> <span class="ty">VERIFIED</span></code></pre>
+  </div>
+    <h3>6.2 Algorithm Agility</h3>
+    <p>This specification mandates SHA-256 for hashing and ECDSA with P-256 for signatures as the mandatory-to-implement algorithms. Implementations should design for algorithm transition. The <code>schema_version</code> field provides the mechanism for introducing new algorithms in future revisions without breaking existing chains.</p>
+    <p>A chain may contain a key rotation record (<code>action_type: key_rotation</code>) that transitions to a new algorithm. Records before and after the transition point are verified with their respective algorithms. Implementations must retain the prior public key and algorithm identifier to enable verification of pre-transition records.</p>
+    <p>A future revision of this specification will define post-quantum transition mechanisms, including ML-DSA (FIPS 204) as a candidate additional signature algorithm.</p>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ §7 REDACTION ═══ -->
+<section>
+  <div class="body-text">
+    <h2>7. Redaction Semantics</h2>
+
+    <p><span class="newthought">Evidence records</span> frequently contain personally identifiable information (PII) that must not persist in the custody layer. The redaction mechanism preserves evidence that the data existed at execution time while removing the data itself.</p>
+
+    <p>When a field is redacted, the signing component: computes the SHA-256 hash of the original field value; replaces the field value with a sentinel (e.g. <code>"[REDACTED]"</code>); and appends a <code>RedactionReceipt</code> to the <code>redaction_receipts</code> array. The canonical payload &mdash; and therefore the <code>content_hash</code> &mdash; is computed <em>after</em> redaction. This means the integrity envelope covers the redacted form. The <code>original_hash</code> in the Redaction Receipt allows a party with legitimate access to the original data to prove that the redacted field contained a specific value, without the custody layer ever holding the raw data.</p>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">5</span>
+    For the following action types, at least one Redaction Receipt is required: <code>regulated_data_access</code>, <code>regulated_data_export</code>, <code>payment_initiation</code>, <code>payment_execution</code>, <code>credit_decision</code>. This ensures PII-containing fields are processed before signing.
+  </span>
+
+  <div class="body-text">
+    <p>The redaction order in the write pipeline is: Capture &rarr; Normalise &rarr; <strong>Redact</strong> &rarr; Sign &rarr; Write. Redaction occurs before signing. The signed record never contains raw PII.</p>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ §8 CAPTURE INTERFACE ═══ -->
+<section>
+  <div class="body-text">
+    <h2>8. Capture Interface Contract</h2>
+
+    <p><span class="newthought">A conforming storage backend</span> &mdash; whether operated by VERIDIC or by any other party implementing this specification &mdash; must accept and guarantee the following:</p>
+
+    <h3>8.1 Writer Interface (IDL)</h3>
+
+<pre><code><span class="kw">interface</span> <span class="ty">EvidenceWriter</span> {
+
+  <span class="cm">// Submit a signed AIR for admission to the Evidence Chain.</span>
+  <span class="cm">// Returns an Evidence Receipt on success.</span>
+  <span class="cm">// Rejects if schema validation, hash chain, or signature fails.</span>
+  <span class="kw">async</span> submit(record: <span class="ty">SignedAIR</span>): <span class="ty">EvidenceReceipt</span>
+
+  <span class="cm">// Retrieve a record by its record_id.</span>
+  <span class="cm">// Returns null if the record does not exist or</span>
+  <span class="cm">// the caller lacks access.</span>
+  <span class="kw">async</span> get(record_id: <span class="ty">string</span>): <span class="ty">SignedAIR</span> | <span class="kw">null</span>
+
+  <span class="cm">// Retrieve the Evidence Receipt for a given record.</span>
+  <span class="kw">async</span> get_receipt(record_id: <span class="ty">string</span>): <span class="ty">EvidenceReceipt</span> | <span class="kw">null</span>
+
+  <span class="cm">// Retrieve a range of records by sequence number.</span>
+  <span class="kw">async</span> get_range(
+    agent_id: <span class="ty">string</span>,
+    from_seq: <span class="ty">uint</span>,
+    to_seq: <span class="ty">uint</span>
+  ): [<span class="ty">SignedAIR</span>]
+}</code></pre>
+
+    <h3>8.2 Guarantees</h3>
+
+    <table class="tufte-table">
+      <thead><tr><th>Property</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Append-only</td><td>Records once admitted cannot be deleted, modified, or reordered. Enforced by both hash chain structure and operational policy.</td></tr>
+        <tr><td>At-least-once</td><td>The writer must accept resubmission of a record with the same <code>record_id</code> without error, deduplicating by <code>record_id</code>.</td></tr>
+        <tr><td>Deduplication</td><td>If a record with a given <code>record_id</code> has already been admitted, resubmission returns the existing Evidence Receipt.</td></tr>
+        <tr><td>Hash chain validation</td><td>Before admitting a record, the writer must verify that <code>prev_chain_hash</code> matches the <code>chain_hash</code> of the last admitted record for this <code>agent_id</code>.</td></tr>
+        <tr><td>Signature validation</td><td>Before admitting a record, the writer must verify the ECDSA-P256 signature using the pre-registered public key for the <code>operator_pubkey_id</code>.</td></tr>
+        <tr><td>Receipt issuance</td><td>The writer must issue a signed Evidence Receipt for every admitted record.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">6</span>
+    The capture mechanism &mdash; how agent actions are intercepted and normalised into AIRs &mdash; is deliberately outside this specification. MCP middleware, framework callbacks (LangChain, CrewAI), reverse proxies, and direct instrumentation are all valid. The specification constrains the <em>output</em> of capture, not its mechanism.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §9 CONFORMANCE ═══ -->
+<section>
+  <div class="body-text">
+    <h2>9. Conformance</h2>
+
+    <p><span class="newthought">A record is EES-conformant</span> if and only if all three of the following conditions hold:</p>
+
+    <table class="tufte-table">
+      <thead><tr><th>Condition</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Schema</td><td>The record satisfies the AgentInteractionRecord schema defined in &sect;4, including all required fields with correct types and a valid <code>schema_version</code> value.</td></tr>
+        <tr><td>Cryptography</td><td>The integrity envelope (&sect;5) uses SHA-256 for content and chain hashing, and ECDSA with the P-256 curve for signature. No other hash or signature algorithm is conformant.</td></tr>
+        <tr><td>Verification</td><td>The record passes all four steps of the verification algorithm defined in &sect;6 when evaluated with the Issuer&rsquo;s public key and the preceding record&rsquo;s <code>chain_hash</code> (or 32 zero bytes for the first record in a chain).</td></tr>
+      </tbody>
+    </table>
+
+    <p>A conformant implementation is any system that produces records satisfying all three conditions above. Conformance is assessed at the record level, not the system level &mdash; a system is conformant if every record it emits is conformant.</p>
+  </div>
+
+  <span class="marginnote">
+    Conformance is deliberately minimal. The specification does not prescribe how records are captured, transported, or stored. It constrains the output &mdash; the record itself &mdash; not the implementation that produces it.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §10 VERSIONING ═══ -->
+<section>
+  <div class="body-text">
+    <h2>10. Versioning and Governance</h2>
+
+    <p><span class="newthought">The <code>schema_version</code> field</span> in every AIR is the mechanism for forward compatibility. Version <code>"air-1.0"</code> is defined by this specification. Future versions will be designated <code>"air-1.1"</code>, <code>"air-2.0"</code>, etc., following semantic versioning principles: minor versions add optional fields; major versions may change required fields or the integrity construction.</p>
+
+    <p>Governance of this specification will transition to a neutral Technical Steering Committee. Until that transition is complete, VERIDIC Inc. maintains editorial control.</p>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ §11 RELATIONSHIP TO SCITT ═══ -->
+<section>
+  <div class="body-text">
+    <h2>11. Relationship to the SCITT Profile</h2>
+
+    <p><span class="newthought">This specification</span> and the <a href="https://datatracker.ietf.org/doc/draft-emirdag-scitt-ai-agent-execution/">AI Agent Execution Profile of SCITT</a> (draft-emirdag-scitt-ai-agent-execution-00) are complementary. The EES defines the canonical AIR schema, the four-step verification algorithm, and the writer interface contract. The SCITT profile defines the binding: how EES-conforming records are encoded as COSE_Sign1 structures, submitted to a SCITT Transparency Service via SCRAPI, validated against a Registration Policy, and receipted using SCITT Evidence Receipts. The SCITT profile also defines the hash chain as a verifiable data structure and specifies how Evidence Receipts may be embedded in the AIR as Transparent Statements (COSE label 394).</p>
+
+    <p>The AgentInteractionRecord schema reproduced in the SCITT profile (§5.2 of that document) is a conformant subset of the EES schema defined here. The canonical definition, including the full field set and extensibility model, is maintained in this specification. The SCITT profile stands alone for implementation purposes; the EES provides additional guidance for implementers building capture interfaces and verification tooling.</p>
+
+    <p>The underlying cryptographic parameters are identical: SHA-256 for hashing, ECDSA with P-256 for signatures. The difference is wire format: the EES defines a JSON-native representation; the SCITT profile encodes the same payload as CBOR within a COSE_Sign1 structure. Key material is interchangeable.</p>
+  </div>
+
+  <span class="sidenote">
+    <span class="sidenote-number">7</span>
+    The EES is governed by VERIDIC (transitioning to an independent TSC). The SCITT profile is governed by the IETF.
+  </span>
+</section>
+
+<hr/>
+
+<!-- ═══ §12 REFERENCES ═══ -->
+<section>
+  <div class="body-text">
+    <h2>12. References</h2>
+
+    <table class="tufte-table">
+      <thead><tr><th>Reference</th><th>Document</th></tr></thead>
+      <tbody>
+        <tr><td>RFC 8785</td><td>Rundgren et al. &mdash; JSON Canonicalization Scheme (JCS). June 2020.</td></tr>
+        <tr><td>RFC 9052</td><td>Schaad, J. &mdash; CBOR Object Signing and Encryption (COSE). August 2022.</td></tr>
+        <tr><td>RFC 9562</td><td>Davis et al. &mdash; Universally Unique Identifiers (UUIDs). May 2024.</td></tr>
+        <tr><td>SCITT</td><td>Birkholz et al. &mdash; draft-ietf-scitt-architecture-22. October 2025.</td></tr>
+        <tr><td>SCITT Profile</td><td>Emirdag, P. &mdash; AI Agent Execution Profile of SCITT Architecture. draft-emirdag-scitt-ai-agent-execution-00. April 2026.</td></tr>
+        <tr><td>W3C DID</td><td>Sporny et al. &mdash; Decentralized Identifiers (DIDs) v1.0. July 2022.</td></tr>
+        <tr><td>W3C VC</td><td>Sporny et al. &mdash; Verifiable Credentials Data Model v2.0. 2024.</td></tr>
+        <tr><td>SPIFFE</td><td>Feldman et al. &mdash; Secure Production Identity Framework for Everyone. 2024.</td></tr>
+        <tr><td>OAuth 2.1</td><td>Hardt, Parecki &mdash; The OAuth 2.1 Authorization Framework. 2026.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr/>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <p><strong>Evidence Envelope Specification v0.1</strong> &middot; Published April 2026 &middot; VERIDIC Inc.</p>
+  <p style="margin-top:0.4rem;"><strong>Canonical URL:</strong> <a href="https://theveridic.ai/standards/ees/v0.1">theveridic.ai/standards/ees/v0.1</a> &nbsp;&middot;&nbsp; <strong>Contact:</strong> <a href="mailto:e.pinar&#64;theveridic.ai">e.pinar&#64;theveridic.ai</a></p>
+  <p style="margin-top:0.4rem;">This specification is published under the Apache 2.0 licence. It may be freely reproduced, implemented, and extended. The canonical source is maintained at the URL above.</p>
+</footer>
+
+</body>
+</html>
