@@ -6,144 +6,186 @@
   <title>Evidence Envelope Specification v0.1 — VERIDIC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* VERIDIC design system v2.7+ — parchment / oxblood / all-Inter */
     :root {
-      --text: #1a1a1a;
-      --muted: #555;
-      --rule: #d0c8bc;
-      --bg: #faf8f4;
-      --navy: #0A1118;
-      --gold: #DFD800;
-      --lime: #B1DB31;
-      --lime-muted: #717500;
-      --blue-5: #325170;
-      --blue-1: #E7F2F6;
-      --red: #D52F41;
+      --parchment: #FEFDFA;
+      --paper:     #F6F1E9;
+      --ink:       #161413;
+      --ink-soft:  #3A3633;
+      --ink-muted: #6B6259;
+      --ink-dim:   #908576;
+      --rule:      #C9C0AD;
+      --rule-faint:#DDD4C0;
+      --seal:      #7C2018;
+      --seal-hover:#631810;
+      --t-resolving: #0E7C66;
+      --t-critical:  #B0291A;
+      --t-infra:     #1C3A5C;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Aptos', 'Helvetica Neue', Arial, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; background: var(--bg); }
+    html { font-size: 16px; background: var(--parchment); }
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      font-size: 1rem; line-height: 1.75; color: var(--text);
-      background: var(--bg); padding: 0 2rem 4rem 2rem;
-      max-width: 820px; margin: 0 auto;
+      font-family: var(--font);
+      font-size: 1rem; line-height: 1.7; color: var(--ink);
+      background: var(--parchment); padding: 0 2rem 4rem 2rem;
+      max-width: 860px; margin: 0 auto;
+      font-feature-settings: 'ss01' 0;
     }
+    a { color: var(--seal); text-decoration-color: var(--rule); text-underline-offset: 2px; }
+    a:hover { color: var(--seal-hover); }
+
+    /* ── Chrome band ── */
     .spec-band {
-      background: var(--navy); color: var(--lime);
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem;
-      font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
-      padding: 0.6rem 1.4rem; margin: 0 -2rem 2.5rem -2rem;
-      display: flex; justify-content: space-between; align-items: center;
+      background: var(--seal); color: var(--parchment);
+      font-family: var(--font); font-size: 0.7rem;
+      font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 0.6rem 1.4rem; margin: 0 -2rem 2rem -2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
     }
     .spec-band .status-pill {
-      background: var(--lime); color: var(--navy);
-      padding: 0.15rem 0.7rem; font-size: 0.68rem;
+      background: var(--parchment); color: var(--seal);
+      padding: 0.18rem 0.7rem; font-size: 0.66rem;
       letter-spacing: 0.1em; font-weight: 600;
     }
-    header { margin-bottom: 3rem; }
+
+    /* ── Masthead ── */
+    .doc-head { margin: 0 0 1.6rem 0; }
+    .doc-head svg { display: block; height: 26px; width: auto; }
+    .doc-head svg path { fill: var(--ink); }
+
+    header { margin-bottom: 2.6rem; border-top: 2px solid var(--seal); padding-top: 1.1rem; }
     header .kicker {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--lime-muted); margin-bottom: 0.6rem; font-weight: 500;
+      font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--seal); margin-bottom: 0.7rem; font-weight: 600;
     }
     header h1 {
-      font-family: 'Space Grotesk', sans-serif; font-size: 1.85rem;
-      font-weight: 700; line-height: 1.15; color: var(--navy); margin-bottom: 0.8rem;
+      font-size: 2rem; font-weight: 600; line-height: 1.12;
+      letter-spacing: -0.02em; color: var(--ink); margin-bottom: 0.8rem;
     }
-    header h1 em { font-style: normal; color: var(--lime-muted); }
+    header h1 em { font-style: normal; color: var(--ink-muted); font-weight: 400; }
     header .subtitle {
-      font-size: 0.95rem; color: var(--muted); line-height: 1.6;
-      border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 0.8rem;
+      font-size: 0.98rem; color: var(--ink-soft); line-height: 1.6;
+      border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 0.9rem;
     }
     header .byline {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--muted); margin-top: 0.8rem; font-weight: 500;
+      font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-muted); margin-top: 0.9rem; font-weight: 500;
     }
-    section { margin-bottom: 2rem; }
+
+    /* ── Sections ── */
+    section { margin-bottom: 2rem; position: relative; }
+    .body-text { max-width: 640px; }
     h2 {
-      font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem;
-      font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.5rem; color: var(--navy);
+      font-size: 0.86rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--seal);
+      margin-top: 2.4rem; margin-bottom: 0.7rem;
     }
     h3 {
-      font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem;
-      font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.4rem; color: var(--blue-5);
+      font-size: 1rem; font-weight: 600; color: var(--ink);
+      margin-top: 1.6rem; margin-bottom: 0.45rem;
     }
-    p { margin-bottom: 1em; }
+    p { margin-bottom: 0.9rem; }
     .newthought { font-weight: 600; }
-    a { color: var(--blue-5); text-decoration: none; border-bottom: 1px solid var(--blue-1); }
-    a:hover { border-bottom-color: var(--blue-5); }
-    .sidenote, .marginnote {
-      display: block; background: var(--blue-1); border-left: 3px solid var(--blue-5);
-      padding: 0.6rem 1rem; margin: 1rem 0 1.2rem 0;
-      font-size: 0.85rem; line-height: 1.55; color: var(--muted);
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Code ── */
+    code {
+      font-family: var(--font); font-variant-numeric: tabular-nums;
+      font-size: 0.86em; background: var(--paper);
+      padding: 0.08em 0.32em; border-radius: 2px; color: var(--ink);
     }
-    .sidenote .sidenote-number, .sidenote-ref {
-      font-size: 0.72rem; color: var(--lime-muted); margin-right: 4px;
-      font-family: 'JetBrains Mono', monospace; font-weight: 600;
-    }
-    .sidenote-ref { vertical-align: super; display: inline; cursor: default; margin-left: 1px; }
-    .marginnote { background: transparent; border-left: 3px solid var(--rule); font-style: italic; }
-    pre, code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
-    code { background: #f0ede7; padding: 0.1rem 0.35rem; }
     pre {
-      background: var(--navy); color: #d4d4d4; padding: 1.2rem 1.4rem;
-      overflow-x: auto; line-height: 1.55; margin: 1rem 0 1.5rem 0;
+      background: var(--paper); border-top: 2px solid var(--seal);
+      padding: 1rem 1.2rem; margin: 0.9rem 0 1.2rem 0;
+      overflow-x: auto; line-height: 1.6;
     }
-    pre code { background: none; padding: 0; color: inherit; }
-    .kw { color: #569cd6; } .ty { color: #4ec9b0; } .str { color: #ce9178; }
-    .cm { color: #6a9955; font-style: italic; } .num { color: #b5cea8; }
-    .tufte-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.5rem 0; }
-    .tufte-table th {
-      text-align: left; font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem;
-      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-      border-bottom: 2px solid var(--navy); padding: 0.3rem 1rem 0.3rem 0; color: var(--navy);
+    pre code { background: none; padding: 0; font-size: 0.82rem; white-space: pre; }
+    .kw  { color: var(--seal); font-weight: 600; }
+    .ty  { color: var(--t-infra); font-weight: 500; }
+    .str { color: var(--ink-soft); }
+    .cm  { color: var(--ink-dim); }
+    .num { color: var(--t-infra); }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; margin: 0.7rem 0 1.2rem 0; font-size: 0.88rem; }
+    th {
+      font-weight: 600; font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--seal); text-align: left;
+      padding: 0.45rem 0.7rem 0.45rem 0; border-bottom: 1px solid var(--ink);
+      vertical-align: bottom;
     }
-    .tufte-table td { padding: 0.5rem 1rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    td {
+      padding: 0.5rem 0.7rem 0.5rem 0; border-bottom: 1px solid var(--rule-faint);
+      vertical-align: top; line-height: 1.5;
+    }
+    tr:last-child td { border-bottom: 1px solid var(--rule); }
     .tufte-table td:first-child {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
-      color: var(--blue-5); padding-right: 1.2rem; white-space: nowrap;
+      font-weight: 500; white-space: nowrap; color: var(--ink);
+      font-variant-numeric: tabular-nums;
     }
-    .spec-box {
-      background: var(--navy); color: #e8e8e8; padding: 1rem 1.4rem;
-      margin: 1.2rem 0; font-size: 0.88rem; line-height: 1.6;
-    }
-    .spec-box strong { color: var(--lime); }
-    .verify-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.5rem 0; }
-    .verify-table th {
-      text-align: left; font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem;
-      font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      border-bottom: 2px solid var(--navy); padding: 0.3rem 0.8rem 0.3rem 0; color: var(--navy);
-    }
-    .verify-table td { padding: 0.5rem 0.8rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
     .verify-table td:first-child {
-      font-family: 'JetBrains Mono', monospace; font-weight: 500;
-      color: var(--navy); text-align: center; width: 2rem;
+      font-weight: 600; color: var(--seal); text-align: center; width: 2rem;
+      font-variant-numeric: tabular-nums;
     }
     .verify-table td:nth-child(2) code { font-size: 0.78rem; }
-    .pass { color: var(--lime-muted); font-weight: 500; }
-    .fail { color: var(--red); font-weight: 500; }
+    .pass { color: var(--t-resolving); font-weight: 600; }
+    .fail { color: var(--t-critical); font-weight: 600; }
+
+    /* ── Callout ── */
+    .spec-box {
+      background: var(--paper); border-left: 2px solid var(--seal);
+      padding: 0.85rem 1.1rem; margin: 0.9rem 0 1.2rem 0;
+      font-size: 0.92rem; line-height: 1.6;
+    }
+    .spec-box strong { color: var(--seal); }
+
+    /* ── Notes: inline cards, single-column flow ── */
+    .sidenote, .marginnote {
+      display: block; max-width: 640px;
+      margin: 0.9rem 0 1.2rem 0;
+      background: var(--paper); border-left: 2px solid var(--rule);
+      padding: 0.7rem 1rem;
+      font-size: 0.84rem; line-height: 1.55; color: var(--ink-muted);
+    }
+    .sidenote-number {
+      display: inline-block; font-weight: 600; color: var(--seal);
+      margin-right: 0.4rem; font-variant-numeric: tabular-nums;
+    }
+    .sidenote code, .marginnote code { font-size: 0.95em; background: var(--parchment); color: var(--ink-soft); }
+
     hr { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
-    footer { margin-top: 3rem; padding-top: 1rem; border-top: 2px solid var(--navy); font-size: 0.8rem; color: #aaa; line-height: 1.6; }
+
+    footer {
+      margin-top: 3rem; padding-top: 1rem; border-top: 2px solid var(--seal);
+      font-size: 0.78rem; color: var(--ink-muted); line-height: 1.6;
+    }
+    footer strong { color: var(--ink-soft); }
+
     @media print {
-      @page { size: A4; margin: 2cm 2.5cm; }
+      @page { size: A4; margin: 2cm 2.5cm; background: #FEFDFA; }
+      html, body { background: #FEFDFA; }
       body { font-size: 0.9rem; padding: 0; max-width: none; }
-      .spec-band { margin: 0 0 1.5rem 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .spec-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .spec-band, .spec-box, pre, .status-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .spec-band { margin: 0 0 1.5rem 0; }
       header h1 { font-size: 1.8rem; }
-      pre { white-space: pre-wrap; word-break: break-all; font-size: 0.75rem; }
+      pre code { white-space: pre-wrap; word-break: break-all; font-size: 0.75rem; }
       h2 { page-break-after: avoid; } table { page-break-inside: avoid; }
     }
     @media (max-width: 600px) {
       body { padding: 0 1rem 3rem 1rem; }
-      header h1 { font-size: 1.6rem; }
-      .spec-band { flex-direction: column; gap: 0.3rem; text-align: center; margin: 0 -1rem 2rem -1rem; }
+      header h1 { font-size: 1.55rem; }
+      .spec-band { flex-direction: column; gap: 0.35rem; text-align: center; margin: 0 -1rem 1.6rem -1rem; }
       .tufte-table td:first-child { white-space: normal; }
     }
   </style>
 </head>
 <body>
+
+
 
 <!-- ═══ SPEC BAND ═══ -->
 <div class="spec-band">
@@ -152,11 +194,16 @@
 </div>
 
 <!-- ═══ HEADER ═══ -->
+<div class="doc-head"><svg xmlns="http://www.w3.org/2000/svg" width="192" height="38" viewBox="0 0 192 38" fill="none">
+  <path d="M4.43 8.30L6.84 8.56L14.91 30.70L17.39 30.70L24.92 8.74L27.83 8.30L27.83 6.61L19.77 6.61L19.77 8.34L22.79 8.74L17.32 24.83L11.81 8.70L15.09 8.34L15.09 6.61L4.43 6.61ZM35.93 8.30L38.96 8.63C39.03 11.69 39.03 14.78 39.03 17.81L39.03 19.36C39.03 22.45 39.03 25.51 38.96 28.50L35.93 28.82L35.93 30.52L54.80 30.52L55.05 24.22L52.53 24.22L51.77 28.61L43.74 28.61C43.67 25.66 43.67 22.67 43.67 19.21L48.35 19.21L48.78 22.31L50.66 22.31L50.66 14.17L48.78 14.17L48.32 17.30L43.67 17.30C43.67 14.68 43.67 11.54 43.74 8.52L51.05 8.52L51.81 12.91L54.33 12.91L54.08 6.61L35.93 6.61ZM74.06 8.45C77.40 8.45 78.99 10.00 78.99 12.95C78.99 15.58 77.51 17.70 73.77 17.70L71.64 17.70C71.64 14.64 71.64 11.54 71.72 8.45ZM63.98 8.30L67 8.63C67.07 11.69 67.07 14.78 67.07 17.81L67.07 19.36C67.07 22.45 67.07 25.51 67 28.50L63.98 28.82L63.98 30.52L74.81 30.52L74.81 28.82L71.72 28.50C71.64 25.62 71.64 22.74 71.64 19.50L73.23 19.50C75.78 19.50 76.90 20.29 77.44 22.99L78.52 28.00C78.92 30.23 80.28 30.95 82.91 30.95C84.28 30.95 85.04 30.80 86.19 30.52L86.19 28.82L83.42 28.50L82.30 23.82C81.62 20.72 80.39 19.18 77.33 18.67C81.76 17.95 83.60 15.40 83.60 12.77C83.60 8.92 80.39 6.61 74.81 6.61L63.98 6.61ZM94.43 8.30L97.46 8.63C97.53 11.69 97.53 14.78 97.53 17.81L97.53 19.36C97.53 22.45 97.53 25.51 97.46 28.50L94.43 28.82L94.43 30.52L105.27 30.52L105.27 28.82L102.24 28.50C102.17 25.44 102.17 22.38 102.17 19.36L102.17 17.81C102.17 14.71 102.17 11.65 102.24 8.63L105.27 8.30L105.27 6.61L94.43 6.61ZM122.30 19.07L122.30 17.81C122.30 14.68 122.30 11.51 122.37 8.45L124.64 8.45C129.32 8.45 132.16 12.01 132.16 18.56C132.16 24.97 129.32 28.64 124.42 28.64L122.37 28.64C122.30 25.55 122.30 22.38 122.30 19.07ZM114.56 8.30L117.58 8.63C117.65 11.69 117.65 14.78 117.65 17.81L117.65 19.07C117.65 22.38 117.65 25.48 117.58 28.50L114.56 28.82L114.56 30.52L124.53 30.52C131.94 30.52 137.16 26.20 137.16 18.56C137.16 11.00 132.48 6.61 125.21 6.61L114.56 6.61ZM146.52 8.30L149.55 8.63C149.62 11.69 149.62 14.78 149.62 17.81L149.62 19.36C149.62 22.45 149.62 25.51 149.55 28.50L146.52 28.82L146.52 30.52L157.36 30.52L157.36 28.82L154.34 28.50C154.26 25.44 154.26 22.38 154.26 19.36L154.26 17.81C154.26 14.71 154.26 11.65 154.34 8.63L157.36 8.30L157.36 6.61L146.52 6.61ZM179.07 31.13C181.88 31.13 184.36 30.48 186.45 29.33L186.59 23.96L184.14 23.96L183.32 28.36C182.06 28.93 180.80 29.18 179.57 29.18C175.18 29.18 171.76 25.76 171.76 18.56C171.76 11.40 175.43 7.91 179.79 7.91C180.83 7.91 181.88 8.16 182.99 8.74L183.82 13.16L186.30 13.16L186.16 7.76C183.86 6.47 181.48 6 179.14 6C172.26 6 166.72 10.72 166.72 18.71C166.72 26.48 171.94 31.13 179.07 31.13Z" fill="#161413"></path>
+</svg></div>
+
+
 <header>
   <p class="kicker">VERIDIC Inc. &middot; Open Standards</p>
   <h1>Evidence Envelope Specification <em>v0.1</em></h1>
   <p class="subtitle">An open format specification for independently custodied AI agent execution records, defining the schema, verification algorithm, and capture interface contract.</p>
-  <p class="byline">Author: Pinar Emirdag &nbsp;&middot;&nbsp; <a href="mailto:e.pinar&#64;theveridic.ai">e.pinar&#64;theveridic.ai</a> &nbsp;&middot;&nbsp; April 2026</p>
+  <p class="byline">Author: Pinar Emirdag &nbsp;&middot;&nbsp; <a href="mailto:e.pinar@theveridic.ai">e.pinar@theveridic.ai</a> &nbsp;&middot;&nbsp; April 2026</p>
 </header>
 
 <hr/>
@@ -165,7 +212,7 @@
 <section>
   <div class="body-text">
     <h2>1. Status and Licence</h2>
-    <p><span class="newthought">This specification</span> is published under the Apache 2.0 licence. It may be reproduced, implemented, and extended without restriction. The Evidence Envelope Specification governs the format, schema, and verification algorithm only. VERIDIC's infrastructure &mdash; the append-only chain, key management, jurisdictional SLAs, institutional access controls &mdash; remains proprietary.</p>
+    <p><span class="newthought">This specification</span> is published under the Apache 2.0 licence. It may be reproduced, implemented, and extended without restriction. The Evidence Envelope Specification governs the format, schema, and verification algorithm only. VERIDIC's custody infrastructure &mdash; the append-only chain, key management, jurisdictional SLAs, institutional access controls &mdash; remains proprietary.</p>
     <p>This is version 0.1. The specification is stable enough for implementation and reference but may be amended in future versions. Governance of this specification will transition to a neutral Technical Steering Committee. Until that transition, VERIDIC Inc. maintains editorial control.</p>
   </div>
 
@@ -200,7 +247,7 @@
       </tbody>
     </table>
 
-    <p>What is <em>not</em> part of this specification: infrastructure (storage, access control, key management, jurisdictional SLAs), APIs, analytics, reliability computation methods, query layer, framework adaptors, storage backends, jurisdiction-specific regulatory mappings. These are proprietary to the infrastructure provider. Content evaluation, risk scoring, or analytical interpretation of recorded actions is also outside the scope of this specification.</p>
+    <p>What is <em>not</em> part of this specification: custody infrastructure, APIs, analytics, reliability computation methods, query layer, framework adaptors, storage backends, jurisdiction-specific regulatory mappings. These are proprietary to the custody provider.</p>
   </div>
 
   <span class="sidenote">
@@ -223,10 +270,7 @@
         <tr><td>Material Action</td><td>An action that creates, modifies, or extinguishes an external obligation, transfers value, accesses regulated data, or produces a consequential output that cannot be trivially reversed.</td></tr>
         <tr><td>AIR</td><td>AgentInteractionRecord. A structured, signed, hash-chained record of a single Material Action.</td></tr>
         <tr><td>Evidence Chain</td><td>The ordered, hash-chained sequence of AIRs for a given agent deployment.</td></tr>
-        <tr><td>Evidence</td><td>Information derived from a signed, hash-chained AgentInteractionRecord that attests to the integrity, provenance, and temporal ordering of a Material Action. Evidence attests to what was recorded and that the record has not been altered; it does not attest to the correctness, legality, or commercial merit of the recorded action.</td></tr>
-        
-        <tr><td>Evidence Custody</td><td>The independent, append-only holding of integrity proofs and signed records on behalf of a principal, without access to, control over, or liability for the underlying assets, transactions, or decisions those records reference.</td></tr>
-        <tr><td>Evidence Custodian</td><td>The party performing Evidence Custody by operating the Transparency Service. Independent of the Agent Operator. Holds the append-only Evidence Chain.</td></tr>
+        <tr><td>Evidence Custodian</td><td>The party holding the append-only Evidence Chain. Independent of the Agent Operator.</td></tr>
         <tr><td>Evidence Receipt</td><td>A signed attestation issued by the Evidence Custodian upon admission of an AIR, confirming chain position and integrity.</td></tr>
         <tr><td>Redaction Receipt</td><td>A record attesting that a field was redacted prior to signing, preserving the SHA-256 hash of the original value.</td></tr>
         <tr><td>Principal</td><td>The human or institutional entity on whose behalf the Agent acts and to whose authority its actions are attributed.</td></tr>
@@ -281,7 +325,7 @@
         <tr><td>outcome_summary</td><td><code>string|null</code></td><td>Human-readable summary of the outcome (post-redaction).</td></tr>
         <tr><td>tool_calls</td><td><code>[ToolCallRecord]</code></td><td>Array of tool/API calls made during execution. See §4.2.</td></tr>
         <tr><td>jurisdiction</td><td><code>string</code></td><td>ISO 3166-1 alpha-2 country code.</td></tr>
-        <tr><td>retention_class</td><td><code>string</code></td><td>Retention period label: <code>regulatory_7yr</code>, <code>regulatory_5yr</code>, <code>regulatory_3yr</code>, <code>operational_1yr</code>, <code>custom</code>. These are informational classification labels; they do not constitute a claim of compliance with any specific regulation.</td></tr>
+        <tr><td>retention_class</td><td><code>string</code></td><td>Applicable retention period: <code>regulatory_7yr</code>, <code>regulatory_5yr</code>, <code>regulatory_3yr</code>, <code>operational_1yr</code>, <code>custom</code>.</td></tr>
         <tr><td>policy_refs</td><td><code>[string]</code></td><td>References to applicable policies governing this action.</td></tr>
         <tr><td>external_refs</td><td><code>[ExternalRef]</code></td><td>Cross-references to external systems (trade IDs, payment references). See §4.2.</td></tr>
         <tr><td>parent_record_id</td><td><code>string|null</code></td><td>UUID of the parent AIR in a multi-step workflow.</td></tr>
@@ -406,12 +450,6 @@ signature      = <span class="kw">ECDSA-P256.sign</span>(chain_hash, private_key
 
     <p>Canonical form follows the JSON Canonicalization Scheme (RFC 8785). All fields except the <code>integrity</code> envelope are included in the canonical payload.</p>
 
-    <h3>5.1.1 Concurrency and Serialisation</h3>
-    <p>The hash chain construction requires sequential production of records within a single Evidence Chain. Because each record's <code>chain_hash</code> depends on the preceding record's <code>chain_hash</code> via <code>prev_chain_hash</code>, a conforming implementation cannot produce record N+1 until record N has been finalised and signed. This dependency provides a total ordering guarantee that is cryptographically enforced rather than administratively asserted.</p>
-    <p>Evidence Chains are scoped per <code>agent_id</code>. Agents with distinct <code>agent_id</code> values operate independent chains with no cross-chain ordering dependency. Concurrent agent deployments do not contend with each other.</p>
-    <p>Within a single <code>agent_id</code>, implementations must serialise record production. Two conforming patterns exist: (a) the Issuer's capture pipeline maintains a per-<code>agent_id</code> serialisation point (queue or mutex) and produces fully signed, sequenced records before submission to the Evidence Custodian; or (b) the Evidence Custodian assigns sequence numbers at admission time and returns <code>chain_hash</code> to the Issuer for use in the next record. Pattern (a) requires Issuer-side state but minimises round trips. Pattern (b) centralises ordering but introduces a synchronous dependency on the Evidence Custodian for each record.</p>
-    <p>If an agent produces multiple Material Actions concurrently, the capture pipeline queues them and serialises into the chain in arrival order. Records may share the same <code>action_timestamp_ms</code>; the <code>sequence_number</code> provides the authoritative total ordering.</p>
-
     <h3>5.2 Identity Binding Levels</h3>
     <table class="tufte-table">
       <thead><tr><th>Level</th><th>Requirements</th></tr></thead>
@@ -511,11 +549,6 @@ signature      = <span class="kw">ECDSA-P256.sign</span>(chain_hash, private_key
 
     <span class="kw">return</span> <span class="ty">VERIFIED</span></code></pre>
   </div>
-    <h3>6.2 Algorithm Agility</h3>
-    <p>This specification mandates SHA-256 for hashing and ECDSA with P-256 for signatures as the mandatory-to-implement algorithms. Implementations should design for algorithm transition. The <code>schema_version</code> field provides the mechanism for introducing new algorithms in future revisions without breaking existing chains.</p>
-    <p>A chain may contain a key rotation record (<code>action_type: key_rotation</code>) that transitions to a new algorithm. Records before and after the transition point are verified with their respective algorithms. Implementations must retain the prior public key and algorithm identifier to enable verification of pre-transition records.</p>
-    <p>A future revision of this specification will define post-quantum transition mechanisms, including ML-DSA (FIPS 204) as a candidate additional signature algorithm.</p>
-  </div>
 </section>
 
 <hr/>
@@ -525,7 +558,7 @@ signature      = <span class="kw">ECDSA-P256.sign</span>(chain_hash, private_key
   <div class="body-text">
     <h2>7. Redaction Semantics</h2>
 
-    <p><span class="newthought">Evidence records</span> frequently contain personally identifiable information (PII) that must not persist in the custody layer. The redaction mechanism preserves evidence that the data existed at execution time while removing the data itself.</p>
+    <p><span class="newthought">Evidence records</span> in regulated environments frequently contain personally identifiable information (PII) that must not persist in the custody layer. The redaction mechanism preserves evidence that the data existed at execution time while removing the data itself.</p>
 
     <p>When a field is redacted, the signing component: computes the SHA-256 hash of the original field value; replaces the field value with a sentinel (e.g. <code>"[REDACTED]"</code>); and appends a <code>RedactionReceipt</code> to the <code>redaction_receipts</code> array. The canonical payload &mdash; and therefore the <code>content_hash</code> &mdash; is computed <em>after</em> redaction. This means the integrity envelope covers the redacted form. The <code>original_hash</code> in the Redaction Receipt allows a party with legitimate access to the original data to prove that the redacted field contained a specific value, without the custody layer ever holding the raw data.</p>
   </div>
@@ -683,9 +716,10 @@ signature      = <span class="kw">ECDSA-P256.sign</span>(chain_hash, private_key
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <p><strong>Evidence Envelope Specification v0.1</strong> &middot; Published April 2026 &middot; VERIDIC Inc.</p>
-  <p style="margin-top:0.4rem;"><strong>Canonical URL:</strong> <a href="https://theveridic.ai/standards/ees/v0.1">theveridic.ai/standards/ees/v0.1</a> &nbsp;&middot;&nbsp; <strong>Contact:</strong> <a href="mailto:e.pinar&#64;theveridic.ai">e.pinar&#64;theveridic.ai</a></p>
-  <p style="margin-top:0.4rem;">This specification is published under the Apache 2.0 licence. It may be freely reproduced, implemented, and extended. The canonical source is maintained at the URL above.</p>
+  <p style="margin-top:0.4rem;"><strong>Canonical URL:</strong> <a href="https://theveridic.github.io/VERIDIC/standards/ees/v0.1">theveridic.github.io/VERIDIC/standards/ees/v0.1</a> &nbsp;&middot;&nbsp; <strong>Contact:</strong> <a href="mailto:e.pinar@theveridic.ai">e.pinar@theveridic.ai</a></p>
+  <p style="margin-top:0.4rem;">This specification is published under the Apache 2.0 licence. It may be reproduced, implemented, and extended without restriction. The Evidence Envelope Specification governs the format, schema, and verification algorithm only. Custody infrastructure remains proprietary to the custody provider.</p>
 </footer>
+
 
 </body>
 </html>
