@@ -1,6 +1,6 @@
 # VERIDIC — Open Standards
 
-This repository is the public home of VERIDIC's open standards work. VERIDIC builds post-execution evidence infrastructure for AI agents; the company site is [theveridic.ai](https://theveridic.ai).
+This repository is the public home of VERIDIC's open standards work. VERIDIC builds evidence infrastructure for AI agents; the company site is [theveridic.ai](https://theveridic.ai).
 
 ## Evidence Envelope Specification (EES)
 
@@ -8,7 +8,7 @@ The Evidence Envelope Specification is an open format for recording the executio
 
 **Current version: v0.1** — [read the specification](https://theveridic.github.io/VERIDIC/standards/ees/v0.1/)
 
-Published versions are not modified after release. Corrections and extensions are made in the next version. The specification text is published under the Apache 2.0 licence; the format is open, while custody infrastructure remains proprietary to the custody provider.
+Published versions are not modified after release. Corrections and extensions are made in the next version. The specification text is published under the Apache 2.0 licence; the format is open.
 
 ## Standards track
 
